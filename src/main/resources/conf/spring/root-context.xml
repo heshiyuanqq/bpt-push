@@ -90,7 +90,7 @@
 	
 	<!--***********************************dubbo暴露服务配置开始************************************ -->
         <!-- 具体的实现bean -->  
-        <bean id="notificationManager" class="org.androidpn.server.xmpp.push.NotificationManager" />  
+        <bean id="notificationService" class="org.androidpn.server.service.impl.NotificationServiceImpl" />  
       
         <!-- 提供方应用信息，用于计算依赖关系 -->  
         <dubbo:application name="bpt-push" />  
@@ -103,6 +103,6 @@
         <dubbo:protocol name="dubbo" port="20880" /><!--   该服务自己本身的地址[即消费者会从上面的zookeeper注册中心找到该地址，然后访问该地址调用服务，dubbo底层可能使用tcp协议的Netty框架] -->
       
         <!-- 声明需要暴露的服务接口 -->  
-        <dubbo:service interface="org.androidpn.server.xmpp.push.AbstractNotificationManager" ref="notificationManager" />  
+        <dubbo:service interface="org.androidpn.server.service.NotificationService" ref="notificationService" />  
 	<!--***********************************dubbo暴露服务配置结束************************************ -->
 </beans>
