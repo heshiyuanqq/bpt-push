@@ -230,9 +230,8 @@ public class NotificationServiceImpl implements NotificationService {
 	 */
 	public Map<String, Boolean>   getClientSessionAliveMap(){
 			Collection<ClientSession> clientS = SessionManager.getInstance().getSessions();
-			Map<String, Boolean> aliveMap=null;
+			Map<String, Boolean> aliveMap=new HashMap<String, Boolean>();
 			if(clientS!=null&&clientS.size()>0){
-				aliveMap = new HashMap<String, Boolean>();
 				for (ClientSession s : clientS) {
 					try {
 							aliveMap.put(s.getUsername(), s.getPresence().isAvailable());
