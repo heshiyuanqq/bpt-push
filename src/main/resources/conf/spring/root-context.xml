@@ -10,7 +10,7 @@
 	http://code.alibabatech.com/schema/dubbo  http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
 	<!-- Root Context: defines shared resources visible to all other web components -->
 	<context:annotation-config />
-	<context:component-scan base-package="org.androidpn.server.**">
+	<context:component-scan base-package="org.androidpn.server.**,com.cmri.bpt.service.token">
 		<context:exclude-filter type="annotation"
 			expression="org.springframework.stereotype.Controller" />
 	</context:component-scan>
@@ -32,7 +32,7 @@
 	
 	
 
-	<!-- AndroidPN Bean Configure -->
+	<!-- *******************************AndroidPN Bean Configure  begin************************************* -->
 			<bean class="org.springframework.beans.factory.config.CustomEditorConfigurer">
 				<property name="customEditors">
 					<map>
@@ -79,9 +79,7 @@
 		
 			<bean id="serviceLocator" class="org.androidpn.server.service.ServiceLocator"
 				scope="singleton" />
-			<bean id="notificationService"
-				class="org.androidpn.server.service.impl.NotificationServiceImpl" />
-	<!-- AndroidPN Bean Configure End -->
+	<!-- ************************************************AndroidPN Bean Configure End*************************************************** -->
 
 	<import resource="classpath*:conf/applicationContext-ibatis.xml" />
 	
@@ -90,7 +88,7 @@
 	
 	<!--***********************************dubbo暴露服务配置开始************************************ -->
         <!-- 具体的实现bean -->  
-        <bean id="notificationService" class="org.androidpn.server.service.impl.NotificationServiceImpl" />  
+      <!--   <bean id="notificationService" class="org.androidpn.server.service.impl.NotificationServiceImpl" />   -->
       
         <!-- 提供方应用信息，用于计算依赖关系 -->  
         <dubbo:application name="bpt-push" />  

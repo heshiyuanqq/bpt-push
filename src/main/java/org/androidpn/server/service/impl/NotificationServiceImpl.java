@@ -19,6 +19,7 @@ import org.androidpn.server.xmpp.session.ClientSession;
 import org.androidpn.server.xmpp.session.SessionManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.xmpp.packet.IQ;
 
 import com.cmri.bpt.common.user.UserContext;
@@ -27,13 +28,13 @@ import com.cmri.bpt.entity.auth.AppTokenSession;
 import com.cmri.bpt.entity.push.PushEnum;
 import com.cmri.bpt.service.token.AppTokenSessionService;
 //import com.cmri.bpt.web.servlet.UserNotFoundException;
-
+@Service("notificationService")
 public class NotificationServiceImpl implements NotificationService {
 	
 	private static final Logger logger = Logger.getLogger(NotificationServiceImpl.class);
 	
 	@Autowired
-	private AppTokenSessionService apptokenserver;
+	private AppTokenSessionService appTokenSessionService;
 
 	@Override
 	public void saveNotification(NotificationPO notificationPO)
@@ -212,7 +213,7 @@ public class NotificationServiceImpl implements NotificationService {
 	 */
 	
 	public List<AppTokenSession> getLiveSession(Integer  userId) {
-			List<AppTokenSession> allSessions = apptokenserver.queryByUserId(userId);
+			List<AppTokenSession> allSessions = appTokenSessionService.queryByUserId(userId);
 			SessionManager mgr = SessionManager.getInstance();
 			List<AppTokenSession> aliveSession = new ArrayList<AppTokenSession>();
 			for (AppTokenSession s : allSessions) {
@@ -227,7 +228,7 @@ public class NotificationServiceImpl implements NotificationService {
 	/**
 	 * key:ClientSession.username,value:isAvailable
 	 */
-	public Map<String, Boolean>   getAliveMap(){
+	public Map<String, Boolean>   getClientSessionAliveMap(){
 			Collection<ClientSession> clientS = SessionManager.getInstance().getSessions();
 			Map<String, Boolean> aliveMap=null;
 			if(clientS!=null&&clientS.size()>0){
@@ -241,5 +242,30 @@ public class NotificationServiceImpl implements NotificationService {
 				}
 			}
 			return aliveMap;
+	}
+	
+	
+	//封装一个方法：根据传递的字符串集合信息，组装一组IO，然后依次发送
+	public void sendNotifcationsToUsers(List<Map<String, String>>  _IOMsgAndToUserMapList){
+			if(_IOMsgAndToUserMapList!=null&&_IOMsgAndToUserMapList.size()>0){
+					NotificationManager manager = NotificationManager.getInstance();
+					for (Map<String, String> _IOMsgAndToUserMap : _IOMsgAndToUserMapList) {
+							String apiKey = _IOMsgAndToUserMap.get("apiKey");
+							String title = _IOMsgAndToUserMap.get("title");
+							String message = _IOMsgAndToUserMap.get("message");
+							String uri = _IOMsgAndToUserMap.get("uri");
+							String toUsername = _IOMsgAndToUserMap.get("toUsername");
+							
+							if(apiKey==null){
+								apiKey=ConsDef.STR_PUSH_API_KEY;
+							}
+							if(uri==null){
+								uri=ConsDef.STR_PUSH_URL;
+							}
+							
+							IQ notificationIQ = manager.createNotificationIQ(apiKey, title, message, uri);
+							manager.sendNotifcationToUser(toUsername, notificationIQ);
+					}
+			}
 	}
 }
