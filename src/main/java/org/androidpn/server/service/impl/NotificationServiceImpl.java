@@ -22,15 +22,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.xmpp.packet.IQ;
 
-import com.cmri.bpt.common.user.UserContext;
-import com.cmri.bpt.common.user.UserContextHolder;
 import com.cmri.bpt.entity.auth.AppTokenSession;
 import com.cmri.bpt.entity.push.PushEnum;
 import com.cmri.bpt.service.token.AppTokenSessionService;
 //import com.cmri.bpt.web.servlet.UserNotFoundException;
 @Service("notificationService")
 public class NotificationServiceImpl implements NotificationService {
-	
 	private static final Logger logger = Logger.getLogger(NotificationServiceImpl.class);
 	
 	@Autowired
@@ -244,7 +241,6 @@ public class NotificationServiceImpl implements NotificationService {
 	}
 	
 	
-	//封装一个方法：根据传递的字符串集合信息，组装一组IO，然后依次发送
 	public void sendNotifcationsToUsers(List<Map<String, String>>  _IOMsgAndToUserMapList){
 			if(_IOMsgAndToUserMapList!=null&&_IOMsgAndToUserMapList.size()>0){
 					NotificationManager manager = NotificationManager.getInstance();
